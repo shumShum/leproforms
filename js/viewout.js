@@ -8,8 +8,9 @@ $(function() {
     form_data.forEach(function(elem) {
         form_hash[elem['name']] = elem['value'];
     });
-    console.log(form_hash);
-    var code = "<b>" + form_data[0]['value'] + ' / ' + form_data[1]['value'] + "</b>"
+
+    var code = "";
+
 
     outarea.text(code);
     viewarea.html(code);
