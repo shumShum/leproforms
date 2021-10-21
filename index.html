@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Leproforms</title>
+    <title>Chicken Slayer 🐔🤘🔥</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="css/custom.css" rel="stylesheet">
@@ -19,9 +19,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#music">Муз.подлепра</a></li>
-            <li><a data-toggle="tab" href="#cinema">Киноподлепра</a></li>
-            <li><a data-toggle="tab" href="#soap">Мылоподлепра</a></li>
+            <li class="active"><a data-toggle="tab" href="#music">Чикен!</a></li>
           </ul>
         </div>
       </div>
@@ -31,28 +29,77 @@
       <div class="col-md-12">
         </br></br></br>
         <div class="row jumbotron">
-          <h1>Привет, %username%!</h1>
-          <p>Здесь ты можешь по готовому шаблону собрать пост для какой-нибудь подлепры, где структура поста традиционна или рекомендована.</p>
+          <h1>🐔🤘🔥</h1>
+          <p>Не захуячить ли нам постец в чикена.</p>
         </div>
       </div>
 
       <div class="tab-content">
         <div id="music" class="tab-pane fade in active">
-          <!--#include virtual="partials/music_form.html" -->
-        </div>
-        <div id="cinema" class="tab-pane fade">
-          <!--#include virtual="partials/cinema_form.html" -->
-        </div>
-        <div id="soap" class="tab-pane fade">
-          <!--#include virtual="partials/soap_form.html" -->
+
+          <form role="form" class="row form-inline post-form" id="music-form">
+            <div class="form-group col-md-8">
+              <div class="form-block">
+                <input type="text" name="artist" class="form-control input-sm" id="artist-input" placeholder="Исполнитель" style="width: 17%;">
+                <b>ー</b>
+                <input type="text" name="album-name" class="form-control input-sm" id="album-input" placeholder="Название альбома" style="width: 25%;">
+                <b>(</b>
+                <input type="text" name="year" class="form-control input-sm" placeholder="Год" style="width: 8%;">
+                <b>)</b>
+              </div>
+
+              <div class="form-block">
+                <input type="text" name="spotify" class="form-control input-sm" placeholder="Spotify" style="width: 13%;">
+                <a href="https://open.spotify.com/search/recent/" target="_blank" id="spotify-link">Spotify</a>
+                <b>|&nbsp;</b>
+
+                <input type="text" name="deezer" class="form-control input-sm" placeholder="Deezer" style="width: 13%;">
+                <a href="https://www.deezer.com/en/" target="_blank" id="deezer-link">Deezer</a>
+                <b>|&nbsp;</b>
+
+                <input type="text" name="apple" class="form-control input-sm" placeholder="Apple Music" style="width: 13%;">
+                <a href="https://tools.applemusic.com/en-us/" target="_blank" id="apple-link">Apple Music</a>
+              </div>
+
+              <div class="form-block">
+                <input type="text" name="yandex" class="form-control input-sm" placeholder="Yandex" style="width: 13%;">
+                <a href="https://music.yandex.ru/" target="_blank" id="yandex-link">Yandex</a>
+                <b>|&nbsp;</b>
+
+                <input type="text" name="vk" class="form-control input-sm" placeholder="VK" style="width: 13%;">
+                <a href="https://vk.com/" target="_blank" id="vk-link">VK</a>
+                <b>|&nbsp;</b>
+
+                <input type="text" name="youtube" class="form-control input-sm" placeholder="YouTube Music" style="width: 13%;">
+                <a href="https://music.youtube.com/search" target="_blank" id="youtube-link">YouTube Music</a>
+                <b>&nbsp;|&nbsp;</b>
+
+                <a href="https://www.last.fm/ru/music/" target="_blank" id="lastfm-link">Last.fm</a>
+                <b>&nbsp;|&nbsp;</b>
+
+                <a href="https://www.google.com/imghp?tbm=isch&tbs=isz:l" target="_blank" id="googlepic-link">cover pic</a>
+              </div>
+
+              <div class="form-block">
+                <textarea class="form-control input-sm" name= "annotation" placeholder="Аннотация" rows="6" style="width: 83%;"></textarea></br>
+              </div>
+
+              <div class="form-block">
+                <input type="text" name="tags" class="form-control input-sm" placeholder="Жанры (тэги, направления) через пробел" style="width: 40%;">
+              </div>
+
+              <div class="form-block">
+                <button type="submit" class="btn btn-default" id="yarrr">YARRR!</button>
+              </div>
+            </div>
+          </form>
+
         </div>
       </div>
 
       <hr>
 
       <div class="row" id="viewout">
-        <div class="col-md-6 highlight" id="preview-post"></div>
-
         <div class="col-md-6 highlight" id="code-post">
           <pre id="pre-code"></pre>
           <button class="btn btn-clipboard btn-default" data-clipboard-target="#pre-code">Скопировать</button>

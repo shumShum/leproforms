@@ -1,167 +1,95 @@
-$(function() {
-  new Clipboard('.btn-clipboard');
-  $('#viewout #code-post').hide();
+$(function () {
+    new ClipboardJS('.btn-clipboard');
+    $('#viewout #code-post').hide();
 
-  class CodeGenerator {
-    constructor(form_hash) {
-        this.form_hash = form_hash;
-    }
-
-    generate() {
-        throw "Not implemented";
-    }
-  }
-
-  class MusicGenerator extends CodeGenerator {
-    generate() {
-        var form_hash = this.form_hash;
-        var code =
-            "<b>" + form_hash['artist'] + " ー " + form_hash['album-name'] + " (" + form_hash['year'] + ")</b></br>" +
-            "<i>" + form_hash['tags'] + "</i></br></br>"
-
-        if (form_hash['cover']) {
-            code +=  "<img src=\"" + form_hash['cover'] + "\" alt=\"" + form_hash['album-name'] + "\" width=\"550\" height=\"550\"></br></br>"
+    class CodeGenerator {
+        constructor(form_hash) {
+            this.form_hash = form_hash;
         }
 
-        if (form_hash['annotation']) {
-            code += form_hash['annotation'].replace(/\n/g, "</br>").trim() + "</br></br>";
+        generate() {
+            throw "Not implemented";
         }
+    }
 
-        if (form_hash['rutracker-mp3'] || form_hash['rutracker-flac'] || form_hash['other-load']) {
-            code += "Скачать: "
+    class MusicGenerator extends CodeGenerator {
+        generate() {
+            var form_hash = this.form_hash;
+            var code =
+                "#album\n" +
+                "**" + form_hash['artist'] + " — " + form_hash['album-name'] + " (" + (form_hash['year'] || "2021") + ")**\n\n"
+
             var links = "";
-            if (form_hash['rutracker-mp3']) {
-                links += "<a href=\"" + form_hash['rutracker-mp3'] + "\">Rutracker mp3</a>"
+            if (form_hash['vk']) {
+                links += "[Spotify](" + form_hash['spotify'] + ")"
             }
-            if (form_hash['rutracker-flac']) {
+            if (form_hash['deezer']) {
                 if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['rutracker-flac'] + "\">Rutracker FLAC</a>"
+                links += "[Deezer](" + form_hash['deezer'] + ")"
             }
-            if (form_hash['other-load']) {
-                if (links) { links += " | или " }
-                links += "<a href=\"" + form_hash['other-load'] + "\">вот отсюда</a>"
+            if (form_hash['spotify']) {
+                if (links) { links += " | " }
+                links += "[Apple](" + form_hash['apple'] + ")"
             }
-            code += links + "</br>"
-        }
+            if (form_hash['yandex']) {
+                if (links) { links += "\n" }
+                links += "[Yandex](" + form_hash['yandex'] + ")"
+            }
+            if (form_hash['apple']) {
+                if (links) { links += " | " }
+                links += "[VK](" + form_hash['vk'] + ")"
+            }
+            if (form_hash['youtube']) {
+                if (links) { links += " | " }
+                links += "[YouTube](" + form_hash['youtube'] + ")"
+            }
 
-        if (form_hash['itunes'] || form_hash['ya-music'] || form_hash['bandcamp'] || form_hash['soundcloud'] || form_hash['other-listen']) {
-            code += "Послушать / купить: "
-            var links = "";
-            if (form_hash['itunes']) {
-                links += "<a href=\"" + form_hash['itunes'] + "\">iTunes</a>"
-            }
-            if (form_hash['ya-music']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['ya-music'] + "\">ЯМузыка</a>"
-            }
-            if (form_hash['bandcamp']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['bandcamp'] + "\">Bandcamp</a>"
-            }
-            if (form_hash['soundcloud']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['soundcloud'] + "\">Soundcloud</a>"
-            }
-            if (form_hash['other-listen']) {
-                if (links) {
-                    links += " | или "
-                }
-                links += "<a href=\"" + form_hash['other-listen'] + "\">вот здесь</a>"
-            }
-            code += links + "</br>"
+            code += links + "\n\n" +
+                form_hash['annotation'].trim() + "\n\n\n" +
+                form_hash['tags'].split(" ").map(function (e) { return "#" + e }).join(" ")
+
+            return code;
         }
-        return code;
     }
-  }
 
-  class CinemaGenerator extends CodeGenerator {
-    generate() {
-        var form_hash = this.form_hash;
-        var code = "";
+    $('.post-form').submit(function (e) {
+        var outarea = $('#viewout #code-post pre');
+        var viewarea = $('#viewout #preview-post');
 
-        if (form_hash['name_orig'] || form_hash['name_ru'] || form_hash['year'] || form_hash['from'] || form_hash['director']) {
-            var title = "";
-            if (form_hash['name_orig']) {
-                title += form_hash['name_orig']
-            }
-            if (form_hash['name_ru']) {
-                if (title) { title += " | " }
-                title += form_hash['name_ru']
-            }
-            if (form_hash['year']) {
-                if (title) { title += " | " }
-                title += form_hash['year']
-            }
-            if (form_hash['from']) {
-                if (title) { title += " | " }
-                title += form_hash['from']
-            }
-            if (form_hash['director']) {
-                if (title) { title += " | " }
-                title += "Реж.: " + form_hash['director']
-            }
-            code += "<b>" + title + "</b></br></br>"
+        var form_data = $(this).serializeArray();
+        var form_hash = {};
+        form_data.forEach(function (elem) {
+            form_hash[elem['name']] = elem['value'];
+        });
+
+        var generator;
+        switch (this['id']) {
+            case 'music-form':
+                generator = new MusicGenerator(form_hash);
+                break;
         }
+        var code = generator.generate();
 
-        if (form_hash['poster']) {
-            code +=  "<img src=\"" + form_hash['poster'] + "\" alt=\"" + form_hash['name_orig'] + "\" width=\"550\"></br></br>"
-        }
-
-        if (form_hash['trailer'] || form_hash['imdb'] || form_hash['kinopoisk'] || form_hash['rutracker']) {
-            var links = "";
-            if (form_hash['trailer']) {
-                links += "<a href=\"" + form_hash['trailer'] + "\">Trailer</a>"
-            }
-            if (form_hash['imdb']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['imdb'] + "\">IMDb</a>"
-            }
-            if (form_hash['kinopoisk']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['kinopoisk'] + "\">КП</a>"
-            }
-            if (form_hash['rutracker']) {
-                if (links) { links += " | " }
-                links += "<a href=\"" + form_hash['rutracker'] + "\">Rutracker</a>"
-            }
-            code += links + "</br></br>"
-        }
-
-        if (form_hash['annotation']) {
-            code += "<i>" + form_hash['annotation'].replace(/\n/g, "</br>").trim() + "</i></br></br>";
-        }
-        if (form_hash['my_annotation']) {
-            code += form_hash['my_annotation'].replace(/\n/g, "</br>").trim() + "</br></br>";
-        }
-
-        return code;
-    }
-  }
-
-  $('.post-form').submit( function(e) {
-    var outarea = $('#viewout #code-post pre');
-    var viewarea = $('#viewout #preview-post');
-
-    var form_data = $(this).serializeArray();
-    var form_hash = {};
-    form_data.forEach(function(elem) {
-        form_hash[elem['name']] = elem['value'];
+        $('#viewout #code-post').show();
+        outarea.text(code.replace(/<\/br>/g, "\n").trim());
+        viewarea.html(code);
+        return false;
     });
 
-    var generator;
-    switch(this['id']) {
-    case 'music-form':
-        generator = new MusicGenerator(form_hash);
-        break;
-    case 'cinema-form':
-        generator = new CinemaGenerator(form_hash);
-        break;
-    }
-    var code = generator.generate();
+    function genLinks() {
+        var artist = $('#artist-input').val()
+        var album = $('#album-input').val()
+        var search = artist + " " + album
 
-    $('#viewout #code-post').show();
-    outarea.text(code.replace(/<\/br>/g, "\n").trim());
-    viewarea.html(code);
-    return false;
-  });
+        $('#vk-link').attr("href", "https://vk.com/search?c%5Bq%5D=" + search + "&c%5Bsection%5D=auto");
+        $('#deezer-link').attr("href", "https://www.deezer.com/search/" + search)
+        $('#spotify-link').attr("href", "https://open.spotify.com/search/" + search)
+        $('#youtube-link').attr("href", "https://music.youtube.com/search?q=" + search)
+        $('#yandex-link').attr("href", "https://music.yandex.ru/search?text=" + search)
+        $('#lastfm-link').attr("href", "https://www.last.fm/ru/music/" + artist)
+        $('#googlepic-link').attr("href", "https://www.google.com/search?tbm=isch&tbs=isz:l&q=" + search)
+    }
+
+    $('#artist-input').on('input', function (e) { genLinks(); });
+    $('#album-input').on('input', function (e) { genLinks(); });
 });
